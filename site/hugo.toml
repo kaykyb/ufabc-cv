@@ -1,0 +1,51 @@
+baseURL = "https://kaykyb.github.io/ufabc-cv/"
+locale = "pt-br"
+defaultContentLanguage = "pt-br"
+title = "UFABC - Visão Computacional"
+theme = "PaperMod"
+
+enableRobotsTXT = true
+enableEmoji = true
+
+[pagination]
+  pagerSize = 20
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[markup.highlight]
+  noClasses = false
+  lineNos = false
+  codeFences = true
+  guessSyntax = true
+
+[params]
+  description = "Notebooks, scripts e relatórios da disciplina de Visão Computacional na UFABC."
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  ShowBreadCrumbs = true
+  ShowPostNavLinks = true
+
+  [params.homeInfoParams]
+    Title = "UFABC - Visão Computacional"
+    Content = "Notebooks, scripts e relatórios da disciplina."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/kaykyb/ufabc-cv"
+
+[[menu.main]]
+  identifier = "posts"
+  name = "Relatórios"
+  url = "/posts/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "github"
+  name = "GitHub"
+  url = "https://github.com/kaykyb/ufabc-cv"
+  weight = 20
