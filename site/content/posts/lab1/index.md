@@ -9,7 +9,11 @@ tags: ["lab"]
 
 > Notebook: [`laboratorios/lab1/lab1.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab1/lab1.ipynb)
 
-**Autores:** Kayky de Brito dos Santos; Andre Marques da Silva; Rafael de Souza Coelho
+**Autores:**
+
+- Kayky de Brito dos Santos
+- André Marques da Silva
+- Rafael de Souza Coelho
 
 **Data de realização dos experimentos:** 5 de junho de 2026
 
