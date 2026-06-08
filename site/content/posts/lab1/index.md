@@ -198,25 +198,15 @@ Os programas corrigidos da Parte 1 (`L__3_webcam.py` e `L__4_webcap.py`) foram p
 
 #### a) Foto geral da equipe
 
-Cada integrante capturou individualmente sua foto pela webcam usando o programa do notebook (mesmo fluxo da Parte 1.C). A foto geral da equipe foi composta a partir dessas imagens individuais em um editor externo, com cada integrante vestindo uma cor primária diferente (vermelho, verde e azul).
+Cada integrante capturou individualmente sua foto pela webcam usando o programa do notebook (mesmo fluxo da Parte 1.C). A foto geral da equipe foi composta a partir dessas imagens individuais em um editor externo.
 
-A foto individual abaixo, gerada pelo programa, corresponde à captura do integrante Kayky:
-
-![Foto individual capturada com a tecla `x` (Kayky)](foto1.png)
-
-A montagem final da equipe será inserida abaixo:
-
-![Foto geral da equipe (Kayky, Andre e Rafael) em RGB](2a-equipe-rgb.png)
-
-> _Placeholder: substituir pela montagem final da equipe quando as fotos individuais de Andre e Rafael estiverem disponíveis._
+![Foto geral da equipe (Kayky, Andre e Rafael) em RGB](foto_integrantes.png)
 
 #### b) Foto-montagem de avatares
 
-Cada integrante forneceu seu avatar; a composição foi feita em editor externo, preservando a mesma ordem da foto geral (Kayky · Andre · Rafael).
+Os avatares individuais foram gerados com IA e em seguida editados e compostos numa única imagem no Figma, preservando a mesma ordem da foto geral (Kayky · Andre · Rafael).
 
-![Foto-montagem dos avatares da equipe](2b-avatares.png)
-
-> _Placeholder: substituir pela montagem final dos avatares._
+![Foto-montagem dos avatares da equipe](foto_avatares.png)
 
 #### c) Vídeos curtos
 
@@ -225,22 +215,26 @@ Foram planejados quatro vídeos curtos com a webcam, conforme o enunciado: dois 
 ##### c.i) Pessoa, movimento lento
 
 <video controls width="100%">
-  <source src="saida.mp4" type="video/mp4">
+  <source src="pessoa_lento.mp4" type="video/mp4">
 </video>
-
-_Vídeo `saida.mp4` capturado com o programa adaptado no notebook._
 
 ##### c.ii) Pessoa, movimento rápido
 
-> _Placeholder: adicionar `2c-pessoa-rapida.mp4` ao mesmo diretório deste post._
+<video controls width="100%">
+  <source src="pessoa_rapido.mp4" type="video/mp4">
+</video>
 
 ##### c.iii) Objeto, movimento lento
 
-> _Placeholder: adicionar `2c-objeto-lento.mp4` ao mesmo diretório deste post._
+<video controls width="100%">
+  <source src="objeto_lento.mp4" type="video/mp4">
+</video>
 
 ##### c.iv) Objeto, movimento rápido
 
-> _Placeholder: adicionar `2c-objeto-rapido.mp4` ao mesmo diretório deste post._
+<video controls width="100%">
+  <source src="objeto_rapido.mp4" type="video/mp4">
+</video>
 
 ### Análise e discussão
 
@@ -248,7 +242,11 @@ A portabilidade dos programas da Parte 1 para o notebook não exigiu mudanças f
 
 ## Conclusões
 
-_Em breve._
+O Laboratório 1 consolidou o ciclo básico de entrada e saída visual em OpenCV: na Parte 1 ficou claro que o segundo argumento de `cv.imread` decide entre tons de cinza e cor, que a velocidade de reprodução depende do intervalo entre `imshow` consecutivos e que a fidelidade de uma gravação por `cv.VideoWriter` depende de declarar um `fps` coerente e evitar transformações indesejadas. 
+
+Na Parte 2, esses programas corrigidos foram portados para o notebook e usados para produzir o material de equipe (foto geral com cores RGB, montagem de avatares e quatro vídeos de movimento lento e rápido).
+
+Revisamos os conceitos básicos de processamento de imagens.
 
 ## Referências
 
