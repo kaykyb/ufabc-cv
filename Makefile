@@ -8,3 +8,8 @@ build:
 
 clean:
 	rm -rf site/public site/resources site/.hugo_build.lock
+
+deploy: clean build
+	rm -rf /tmp/cv-deploy-gh-branch && cp -r site/public /tmp/cv-deploy-gh-branch
+	git checkout gh-pages-deploy
+	cp -r /tmp/cv-deploy-gh-branch/. .
