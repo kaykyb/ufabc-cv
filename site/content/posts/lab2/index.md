@@ -21,11 +21,14 @@ tags: ["lab"]
 
 ## Introdução
 
-> _[Placeholder]_
+Este relatório detalha os experimentos conduzidos no Laboratório 2 de Visão Computacional, cujo foco é a extração e correspondência de características (*features*) em imagens. Características são pontos ou regiões de interesse — como bordas e cantos — que se destacam visualmente e podem ser identificados de forma repetível, independentemente de alterações na câmera ou no cenário. O objetivo principal desta prática é compreender e aplicar detectores e descritores locais robustos, culminando no uso prático do algoritmo SIFT para encontrar correspondências entre imagens estáticas e fluxos de vídeo ao vivo, além de explorar a Transformada de Hough para detecção paramétrica de formas geométricas.
 
 ## Fundamentação Teórica
 
-> _[Placeholder: features, Harris, Shi-Tomasi, SIFT]_
+A utilização de *features* locais divide-se em três etapas essenciais: detecção (identificação dos pontos de interesse), descrição (extração de um vetor representativo da região ao redor do ponto) e correspondência ou *matching* (cálculo de similaridade entre descritores de vistas distintas). Para que um algoritmo seja eficiente, os descritores precisam garantir invariância geométrica e discriminabilidade.
+
+* **Detecção de Cantos (Harris e Shi-Tomasi):** São métodos focados em encontrar cantos (*corners*), regiões onde a intensidade da imagem varia significativamente em múltiplas direções simultâneas.
+* **SIFT (Scale-Invariant Feature Transform):** Método de estado da arte que resolve simultaneamente os problemas de invariância à escala e à rotação 2D, construindo um histograma de orientações de gradientes para gerar um vetor descritor final de 128 dimensões. O SIFT é extraordinariamente robusto a mudanças de iluminação e rotações fora do plano de até 60 graus.
 
 ---
 
@@ -123,12 +126,20 @@ Podemos notar que o matching se mantém bem estável quando o objeto se mexe, o 
 
 ### Análise e discussão
 
-> _[Placeholder]_
+As técnicas de detecção e correspondência de features formam a base para diversas soluções modernas. Observando os testes da Parte 2, o uso do Ratio Test provou ser indispensável na etapa de matching, pois calcula a razão entre a distância do melhor candidato e a do segundo melhor, limpando correspondências ambíguas antes de aplicarmos o RANSAC para o cálculo da homografia. Na Parte 3, a Transformada de Hough mostrou-se altamente eficaz na parametrização de contornos e formas perfeitas.
 
 ## Conclusões
 
-> _[Placeholder]_
+O laboratório demonstrou com sucesso a aplicação prática de descritores invariantes à escala e detectores geométricos. A transição dos experimentos com imagens estáticas para o processamento de vídeo estereoscópico ao vivo evidenciou que algoritmos robustos como o SIFT, quando aliados a filtros de distância métrica (FLANN + Ratio Test) e de consenso geométrico (Homografia via RANSAC), entregam uma detecção extremamente estável para o rastreamento dinâmico. 
+
+Conclui-se que o domínio integrado do pipeline de Feature Detection com transformadas morfológicas amplia significativamente a capacidade de solucionar problemas complexos do mundo real.
 
 ## Referências
 
-> _[Placeholder]_
+- [1] OpenCV. _Feature Detection and Description._ <https://docs.opencv.org/4.x/db/d27/tutorial_py_table_of_contents_feature2d.html>
+
+- [2] OpenCV. _Feature Matching + Homography to find Objects._ <https://docs.opencv.org/4.x/d1/de0/tutorial_py_feature_homography.html>
+
+- [3] LearnOpenCV. _Hough Transform with OpenCV (C++/Python)._ <https://learnopencv.com/hough-transform-with-opencv-c-python/>
+
+- [4] Material da disciplina UFABC, Visão Computacional, Laboratório 2.
