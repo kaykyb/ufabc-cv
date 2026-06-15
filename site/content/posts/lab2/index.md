@@ -21,7 +21,7 @@ tags: ["lab"]
 
 ## Introdução
 
-Este relatório detalha os experimentos conduzidos no Laboratório 2 de Visão Computacional, cujo foco é a extração e correspondência de características (*features*) em imagens. Características são pontos ou regiões de interesse — como bordas e cantos — que se destacam visualmente e podem ser identificados de forma repetível, independentemente de alterações na câmera ou no cenário. O objetivo principal desta prática é compreender e aplicar detectores e descritores locais robustos, culminando no uso prático do algoritmo SIFT para encontrar correspondências entre imagens estáticas e fluxos de vídeo ao vivo, além de explorar a Transformada de Hough para detecção paramétrica de formas geométricas.
+Este relatório detalha os experimentos conduzidos no Laboratório 2 de Visão Computacional, cujo foco é a extração e correspondência de características (*features*) em imagens. Características são pontos ou regiões de interesse – como bordas e cantos – que se destacam visualmente e podem ser identificados de forma repetível, independentemente de alterações na câmera ou no cenário. O objetivo principal desta prática é compreender e aplicar detectores e descritores locais robustos, culminando no uso prático do algoritmo SIFT para encontrar correspondências entre imagens estáticas e fluxos de vídeo ao vivo, além de explorar a Transformada de Hough para detecção paramétrica de formas geométricas.
 
 ## Fundamentação Teórica
 
@@ -126,13 +126,15 @@ Podemos notar que o matching se mantém bem estável quando o objeto se mexe, o 
 
 ### Análise e discussão
 
-As técnicas de detecção e correspondência de features formam a base para diversas soluções modernas. Observando os testes da Parte 2, o uso do Ratio Test provou ser indispensável na etapa de matching, pois calcula a razão entre a distância do melhor candidato e a do segundo melhor, limpando correspondências ambíguas antes de aplicarmos o RANSAC para o cálculo da homografia. Na Parte 3, a Transformada de Hough mostrou-se altamente eficaz na parametrização de contornos e formas perfeitas.
+As técnicas de detecção e correspondência de features formam a base para diversas soluções modernas. Observando os testes da Parte 2, o uso do Ratio Test provou ser indispensável na etapa de matching, pois calcula a razão entre a distância do melhor candidato e a do segundo melhor, limpando correspondências ambíguas antes de aplicarmos o RANSAC para o cálculo da homografia.
+
+Na Parte 2, o contorno do objeto não se mostrou tão útil, provavelmente por conta da imagem de referência não ter a delimitação apenas do objeto que estamos buscando na câmera 2.
 
 ## Conclusões
 
-O laboratório demonstrou com sucesso a aplicação prática de descritores invariantes à escala e detectores geométricos. A transição dos experimentos com imagens estáticas para o processamento de vídeo estereoscópico ao vivo evidenciou que algoritmos robustos como o SIFT, quando aliados a filtros de distância métrica (FLANN + Ratio Test) e de consenso geométrico (Homografia via RANSAC), entregam uma detecção extremamente estável para o rastreamento dinâmico. 
+O laboratório demonstrou com sucesso a aplicação prática de descritores invariantes à escala e detectores geométricos. A transição dos experimentos com imagens estáticas para o processamento de vídeo estereoscópico ao vivo evidenciou que algoritmos robustos como o SIFT, quando aliados a filtros de distância métrica (FLANN + Ratio Test), entregam uma detecção extremamente estável para o rastreamento dinâmico.
 
-Conclui-se que o domínio integrado do pipeline de Feature Detection com transformadas morfológicas amplia significativamente a capacidade de solucionar problemas complexos do mundo real.
+Conclui-se que o domínio do pipeline de Feature Detection com transformadas amplia significativamente a capacidade de solucionar problemas complexos do mundo real.
 
 ## Referências
 
