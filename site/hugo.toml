@@ -39,13 +39,19 @@ enableEmoji = true
     url = "https://github.com/kaykyb/ufabc-cv"
 
 [[menu.main]]
-  identifier = "posts"
-  name = "Relatórios"
-  url = "/posts/"
+  identifier = "labs"
+  name = "Laboratórios"
+  url = "/tags/lab/"
   weight = 10
+
+[[menu.main]]
+  identifier = "trabalho"
+  name = "Trabalho Final"
+  url = "/tags/trabalho/"
+  weight = 20
 
 [[menu.main]]
   identifier = "github"
   name = "GitHub"
   url = "https://github.com/kaykyb/ufabc-cv"
-  weight = 20
+  weight = 30
