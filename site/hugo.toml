@@ -27,6 +27,7 @@ enableEmoji = true
 
 [params]
   description = "Notebooks, scripts e relatórios da disciplina de Visão Computacional na UFABC."
+  author = ["Kayky de Brito dos Santos", "André Marques da Silva", "Rafael de Souza Coelho"]
   defaultTheme = "auto"
   ShowReadingTime = true
   ShowShareButtons = false
