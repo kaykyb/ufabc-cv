@@ -8,12 +8,12 @@ authors:
   ]
 experimentDate: 2026-07-15
 date: 2026-07-20
-summary: "Estimação de profundidade utilizando câmera estéreo: do mapa de disparidade à medição real de distância de objetos e simulação de um sistema de prevenção de colisões."
+summary: "Estimação de profundidade com a câmera estéreo do Lab 5: sintonia do Block Matching do OpenCV por interface gráfica, conversão de disparidade em distância métrica, gráfico profundidade vs. disparidade e um teste de prevenção de obstáculos, com a análise honesta dos mapas ruidosos herdados da calibração torta da aula anterior."
 tags: ["lab"]
 math: true
 ---
 
-> Códigos e imagens: [`laboratorios/lab6/`](https://github.com/kaykyb/ufabc-cv/tree/main/laboratorios/lab6)
+> Códigos e dados: [`laboratorios/lab6/`](https://github.com/kaykyb/ufabc-cv/tree/main/laboratorios/lab6). O pipeline completo está consolidado no notebook [`lab6.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/lab6.ipynb).
 
 **Autores:**
 
@@ -29,9 +29,11 @@ Equipe 8 - "Sem Título"
 
 ## Introdução
 
-Este relatório apresenta os experimentos do Laboratório 6 da disciplina de Visão Computacional, cujo objetivo central é aprofundar o estudo da visão estereoscópica através da geração algorítmica do **Mapa de Disparidade** e, consequentemente, da extração do **Mapa de Profundidade**.
+Este relatório descreve os experimentos do Laboratório 6 de Visão Computacional, dedicado à extração de distância a partir de um par estéreo. No Laboratório 5 construímos a câmera estereoscópica (duas webcams USB sobre uma base rígida) e a calibramos, chegando ao anáglifo 3D. Ali paramos na percepção qualitativa da profundidade; aqui damos o passo seguinte e quantificamos essa percepção, instruindo o computador a calcular a distância absoluta de objetos na cena.
 
-No Laboratório 5, focamos na construção física do hardware (utilizando duas webcams USB alinhadas horizontalmente) e na calibração do sistema, culminando na percepção visual da terceira dimensão através de imagens anáglifas. Neste laboratório, avançamos para a quantificação dessa percepção: instruiremos o computador a calcular a distância absoluta de objetos na cena usando algoritmos de correspondência de blocos (*Block Matching* e *Semi-Global Block Matching*). O roteiro detalha a sintonia fina dos parâmetros do algoritmo de correspondência, a modelagem matemática que converte a disparidade de pixels (2D) em distância métrica real (3D), e a aplicação prática desse conceito na simulação de um sistema de percepção espacial e prevenção de obstáculos — tecnologia fundamental para o nosso projeto final da disciplina.
+O roteiro segue a sequência do enunciado: reaproveitamos a calibração da aula anterior, sintonizamos por interface gráfica os parâmetros do algoritmo de correspondência de blocos (*Block Matching*) do OpenCV para gerar o **Mapa de Disparidade**, aplicamos a triangulação que converte a disparidade em pixels (2D) na distância métrica real (3D) do **Mapa de Profundidade**, levantamos o gráfico de profundidade contra disparidade e, por fim, executamos o programa de prevenção de obstáculos que mede continuamente a distância de um objeto. É uma capacidade diretamente aplicável ao nosso trabalho final, que depende de decidir quando um objeto está próximo o bastante para ser processado.
+
+Adiantamos que os resultados carregam a herança do problema diagnosticado no Lab 5: a calibração estéreo ficou degenerada (as câmeras esquerda e direita foram capturadas com os índices trocados em relação à visualização), e isso se reflete diretamente na qualidade dos mapas de disparidade obtidos aqui. Optamos por relatar os resultados como saíram, com a análise honesta das suas limitações, em vez de forçar números que não temos.
 
 ## Fundamentação Teórica
 
@@ -53,7 +55,9 @@ O **Mapa de Disparidade** é uma matriz de imagem (geralmente visualizada em ton
 
 Para encontrar os pares correspondentes, o OpenCV oferece duas abordagens principais:
 1.  **Block Matching (BM):** O algoritmo desliza uma janela (bloco de pixels) ao longo da linha epipolar e calcula a métrica de erro (como *Sum of Absolute Differences* - SAD). É rápido, mas suscetível a ruídos em áreas com pouca textura.
-2.  **Semi-Global Block Matching (SGBM):** Diferente do BM que analisa apenas correspondências locais, o SGBM impõe restrições de suavidade global, penalizando grandes saltos de disparidade entre pixels vizinhos (utilizando os parâmetros $P_1$ e $P_2$). Isso resulta em mapas de disparidade significativamente mais densos e consistentes, com bordas de objetos mais definidas, sendo o método escolhido para as medições mais precisas neste experimento.
+2.  **Semi-Global Block Matching (SGBM):** Diferente do BM, que analisa apenas correspondências locais, o SGBM impõe restrições de suavidade global, penalizando grandes saltos de disparidade entre pixels vizinhos (utilizando os parâmetros $P_1$ e $P_2$). Isso resulta em mapas de disparidade mais densos e consistentes, com bordas de objetos mais definidas.
+
+Neste experimento, o programa de sintonia fornecido pela referência [3] (`disparity_param_gui.py`) instancia o **Block Matching** via [`cv2.StereoBM_create()`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/disparity_param_gui.py), e foi esse o método efetivamente usado por nós. Registramos a comparação com o SGBM na fundamentação porque ela explica boa parte do ruído observado nos nossos mapas (o BM é o mais suscetível a regiões sem textura), e o SGBM fica como caminho natural de melhoria para o trabalho final.
 
 ### Do Mapa de Disparidade ao Mapa de Profundidade (Triangulação Pinhole)
 
@@ -78,8 +82,8 @@ O fluxo completo, desde a captura até o cálculo de prevenção de obstáculos,
 ```mermaid
 graph TD
     A[Captura do Par Estéreo <br> Imagem L / Imagem R] --> B[Retificação de Imagem <br> Utilização de params_py.xml]
-    B --> C[Sintonia de Parâmetros <br> GUI / Trackbars SGBM]
-    C --> D[Cálculo Computacional <br> Semi-Global Block Matching]
+    B --> C[Sintonia de Parâmetros <br> GUI / Trackbars Block Matching]
+    C --> D[Cálculo Computacional <br> StereoBM: compute L, R]
     D --> E[Mapa de Disparidade <br> Imagem Tons de Cinza/ColorMap]
     E --> F[Fórmula de Triangulação <br> Z = f*B / d]
     F --> G[Mapa de Profundidade <br> Medição Métrica Z]
@@ -90,77 +94,106 @@ graph TD
 
 ## Procedimentos experimentais
 
-Todos os experimentos a seguir utilizaram as duas webcams integradas ao suporte desenvolvido no Laboratório anterior, assegurando a manutenção da *baseline* física projetada.
+Todos os experimentos a seguir utilizaram as duas webcams fixas no suporte construído no Laboratório anterior, mantendo a *baseline* física projetada. Os cinco programas do roteiro (captura, calibração, sintonia do Block Matching, calibração disparidade para profundidade e prevenção de obstáculos) foram adaptados do repositório de Satya Mallick, a LearnOpenCV (referência [3]), e consolidados por nós em um único notebook, o [`lab6.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/lab6.ipynb), que fixa os IDs das câmeras em 0 (esquerda) e 1 (direita) e unifica os caminhos dos arquivos de parâmetros trocados entre as etapas. As três primeiras etapas também estão disponíveis como scripts `.py` independentes na mesma pasta [`laboratorios/lab6/`](https://github.com/kaykyb/ufabc-cv/tree/main/laboratorios/lab6).
 
 ### I. Calibração Estéreo com Parâmetros Intrínsecos Fixos
 
-[Descrever aqui: Relatar se a calibração do Lab 5 precisou ser refeita ou se o arquivo `params_py.xml` foi aproveitado integralmente. Caso tenham capturado novas imagens (`capture_images.py`), cite a quantidade de pares utilizados e o padrão de tabuleiro (ex: 8x6). Confirme que a calibração assegurou um erro de reprojeção satisfatório.]
+Refizemos a captura e a calibração do zero, repetindo o procedimento do Lab 5 seguindo a seção *Step 2: Performing stereo calibration with fixed intrinsic parameters* da referência [1]. Primeiro rodamos a etapa de captura ([`capture_images.py`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/capture_images.py), célula 1 do notebook), que mostra as duas webcams ao vivo com um contador regressivo e, quando os cantos do tabuleiro de **9x6 cantos internos** são detectados simultaneamente nas duas imagens, salva o par em `data/stereoL/` e `data/stereoR/`. Capturamos **28 pares** (`img1.png` a `img28.png`), versionados em [`data/`](https://github.com/kaykyb/ufabc-cv/tree/main/laboratorios/lab6/data).
 
-### II. Otimização dos Parâmetros do Block Matching (SGBM)
+Em seguida rodamos o [`calibrate.py`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/calibrate.py), que é o mesmo pipeline do Lab 5: calibra cada câmera individualmente, faz a calibração estéreo com `cv2.stereoCalibrate` usando a flag `CALIB_FIX_INTRINSIC` (que mantém as intrínsecas fixas e estima apenas $R$, $T$, $E$ e $F$ entre as câmeras) e retifica com `cv2.stereoRectify`, gravando os mapas de retificação em [`data/params_py.xml`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/data/params_py.xml):
 
-Para gerar mapas de disparidade precisos, os hiperparâmetros do `StereoSGBM` não são universais; eles dependem fortemente da iluminação do laboratório, da resolução da câmera e do intervalo de profundidade desejado. Adaptamos o script `disparity_params_gui.py` para carregar as matrizes de calibração (`params_py.xml`) e utilizamos a interface gráfica com *trackbars* para ajustar os seguintes parâmetros críticos de otimização:
+```python
+flags = cv2.CALIB_FIX_INTRINSIC
+retS, new_mtxL, distL, new_mtxR, distR, Rot, Trns, Emat, Fmat = cv2.stereoCalibrate(
+    obj_pts, img_ptsL, img_ptsR, new_mtxL, distL, new_mtxR, distR,
+    imgL_gray.shape[::-1], criteria_stereo, flags,
+)
+```
 
-*   **`minDisparity`**: Deslocamento inicial da busca na linha epipolar.
-*   **`numDisparities`**: A janela de busca horizontal (deve ser sempre divisível por 16).
-*   **`blockSize`**: Tamanho da janela de correlação de pixels.
-*   **`uniquenessRatio`**: Margem de segurança de correspondência para evitar falsos positivos em texturas repetitivas.
-*   **`speckleWindowSize` e `speckleRange`**: Filtros de pós-processamento para remover manchas (ruídos isolados chamados de "sal e pimenta").
+Como discutido em detalhe na análise do [Laboratório 5]({{< ref "lab5" >}}), essa calibração estéreo herda um problema de fundo: os índices esquerda/direita das câmeras foram trocados entre a captura e a visualização, o que degenera a retificação. Não conseguimos sanar isso a tempo desta aula, e o arquivo `params_py.xml` usado aqui é o resultado dessa calibração imperfeita. Isso condiciona tudo o que vem a seguir, e voltaremos ao ponto na análise.
 
-[Descrever aqui: Apresente os valores fixos escolhidos empiricamente pela equipe após mexer na interface gráfica (ex: blockSize=11, numDisparities=64, etc.) e que resultaram no melhor mapa de disparidade, justificando que esses valores foram gravados no arquivo `depth_estimation_params_py.xml`.]
+### II. Sintonia dos Parâmetros do Block Matching
 
-| Janela de Calibração (Trackbars) | Mapa de Disparidade Gerado (Pós-Sintonia) |
-| :---: | :---: |
-| ![Ajuste SGBM](placeholder_trackbars_sgbm.png) | ![Mapa Resultante](placeholder_mapa_disparidade.png) |
+Os hiperparâmetros do Block Matching não são universais: dependem da iluminação, da resolução e da faixa de profundidade da cena. Seguindo a seção *Block Matching For Dense Stereo Correspondence* da referência [3], adaptamos o [`disparity_param_gui.py`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/disparity_param_gui.py) para carregar as matrizes de retificação do nosso `params_py.xml` e ajustamos os parâmetros ao vivo por *trackbars*. O núcleo do programa retifica os dois quadros, lê os parâmetros da interface e recomputa a disparidade a cada iteração:
+
+```python
+stereo = cv2.StereoBM_create()
+# ... lê trackbars e aplica stereo.setNumDisparities(...), setBlockSize(...), etc.
+disparity = stereo.compute(Left_nice, Right_nice)
+disparity = disparity.astype(np.float32)
+disparity = (disparity / 16.0 - minDisparity) / numDisparities  # normaliza para [0, 1]
+```
+
+Os parâmetros mais decisivos na sintonia foram:
+
+*   **`numDisparities`**: largura da janela de busca horizontal (múltiplo de 16), que define a faixa de profundidades detectável.
+*   **`blockSize`**: tamanho da janela de correlação, o principal *trade-off* entre ruído e definição de bordas.
+*   **`preFilterCap` e `textureThreshold`**: pré-filtro e limiar de textura do BM, que descartam regiões lisas sem correspondência confiável.
+*   **`uniquenessRatio`**: margem mínima entre a melhor e a segunda melhor correspondência, para evitar casamentos ambíguos em texturas repetitivas.
+*   **`speckleWindowSize` e `speckleRange`**: pós-filtro que remove manchas isoladas ("sal e pimenta").
+
+Ao encerrar (tecla `ESC`), o programa grava os valores sintonizados, junto da constante de profundidade `M`, em [`data/depth_estmation_params_py.xml`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/data/depth_estmation_params_py.xml), que é reaproveitado nos passos seguintes.
+
+A imagem abaixo mostra a interface em operação, com a cena de teste (as mãos de um integrante à frente das câmeras) e os *trackbars* de cada parâmetro. Já aqui fica evidente a fragilidade do BM sobre a nossa calibração: o mapa de disparidade sai esparso, com grandes áreas pretas (pixels inválidos) e correspondência confiável apenas nas bordas de maior contraste.
+
+![Interface de sintonia do Block Matching (disparity_param_gui.py), com o mapa de disparidade ao vivo e os trackbars dos parâmetros](disparidade_bm_gui.png)
 
 ### III. Do Mapa de Disparidade à Medição Prática (Gráfico $Z \times d$)
 
-No script `disparity2depth_calib.py`, o objetivo foi correlacionar os pixels do mapa de disparidade gerado no passo anterior com uma distância em centímetros aferida manualmente com uma trena.
-Posicionamos marcadores em distâncias conhecidas a partir do plano das lentes (ex: 30cm, 50cm, 80cm, 100cm). Ao clicar nos alvos na tela, registramos o valor da disparidade associada a cada profundidade.
+Seguindo a seção *From disparity map to depth map* da referência [3], usamos o `disparity2depth_calib.py` (célula 4 do [`lab6.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/lab6.ipynb), adaptado do [código original](https://github.com/spmallick/learnopencv/tree/master/Depth-Perception-Using-StereoCamera) para ler o nosso `params_py.xml`) para correlacionar a disparidade lida na tela com a distância real medida com trena. Posicionamos um alvo em distâncias conhecidas a partir do plano das lentes e, para cada uma, clicamos no alvo para registrar a disparidade associada. As distâncias amostradas foram **70, 110, 150, 190 e 230 cm**.
 
-[Descrever aqui: Com os pontos anotados, plotamos o gráfico sugerido abaixo, que ilustra a relação teórica não linear esperada. Descreva se a curva encontrada experimentalmente se assemelhou ao decaimento hiperbólico ditado por $Z = (f \cdot B) / d$.]
+Na prática, essa etapa ajusta a constante $M = f \cdot B$ da triangulação, de modo que a profundidade seja recuperada por $Z = M / d$. O valor obtido foi gravado no `depth_estmation_params_py.xml` (`M = 39.075`).
 
-> **Gráfico Profundidade ($Z$) vs. Disparidade ($d$):**
+O gráfico gerado relaciona a profundidade medida com a disparidade normalizada (à esquerda) e com o seu inverso (à direita):
 
-![Gráfico Profundidade vs Disparidade](placeholder_grafico_z_vs_d.png)
+![Gráfico da relação entre profundidade e disparidade (esquerda) e entre profundidade e o inverso da disparidade (direita)](grafico_z_vs_d.png)
+
+O comportamento esperado seria uma curva monotônica, com a disparidade caindo conforme a profundidade aumenta (e, no gráfico da direita, os pontos de $1/d$ se alinhando em uma reta que passa pela origem, já que $Z \propto 1/d$). Não foi o que observamos: os pontos ficaram dispersos e não monotônicos, com destaque para a amostra de 190 cm, que destoa completamente das vizinhas. Isso é coerente com os mapas de disparidade ruidosos da etapa anterior, e portanto com a calibração degenerada herdada do Lab 5: sem uma retificação correta, a disparidade lida em cada ponto não corresponde de forma confiável à profundidade real, e o ajuste de $M$ perde precisão.
 
 ### IV e V. Medidas de Distância e Prevenção de Obstáculos
 
-Adaptamos o script `obstacle_avoidance.py`, que lê continuamente a câmera, calcula a disparidade densa através do SGBM com os parâmetros otimizados e aplica a curva de distância para alertar sobre a aproximação de objetos.
-Para validar a precisão, selecionamos três objetos com diferentes formatos e texturas e efetuamos medições do centro de cada objeto em relação à câmera, comparando o valor predito pelo software com a medição física (trena).
+Seguindo a seção *Obstacle avoidance system* da referência [3], executamos o `obstacle_avoidance.py` (célula 5 do [`lab6.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/lab6.ipynb), adaptado do [código original](https://github.com/spmallick/learnopencv/tree/master/Depth-Perception-Using-StereoCamera) para ler o nosso `params_py.xml` e o `depth_estmation_params_py.xml`). O programa lê as câmeras ao vivo, recomputa a disparidade com o Block Matching sintonizado, converte para distância pela curva $Z = M / d$ e classifica a cena em zonas (`SAFE!`, entre outras) conforme a proximidade do objeto mais próximo. A imagem abaixo mostra uma leitura durante o experimento, com o mapa de disparidade à esquerda, a imagem retificada à direita, o rótulo `SAFE!` e a distância estimada impressa no rodapé (`Distance = 151.68 cm`):
 
-**Tabela Comparativa de Medições (Câmera Estéreo vs. Trena Real)**
+![Sistema de prevenção de obstáculos em operação: mapa de disparidade, cena retificada, rótulo SAFE! e distância estimada de 151,68 cm](obstacle_avoidance.png)
 
-| Objeto / Posição Relativa | Distância Real da Trena ($Z_{real}$ em cm) | Distância Calculada ($Z_{SGBM}$ em cm) | Erro Absoluto ($|Z_{real} - Z_{SGBM}|$) | Erro Relativo (%) |
+Como pede o enunciado (item V), a validação deveria comparar, para pelo menos três objetos, a distância calculada com a distância real medida por trena, calculando o erro absoluto e relativo. Aqui esbarramos na limitação já relatada: com a calibração degenerada, o mapa de disparidade sai esparso e ruidoso (visível na metade esquerda da imagem acima), e as leituras de distância flutuam demais para constituir uma medição confiável. A própria leitura de 151,68 cm da captura oscilava a cada quadro para o mesmo objeto parado. Por integridade, preferimos não preencher a tabela com números que não refletem uma medição válida.
+
+> **Placeholder:** refazer a tabela comparativa (três objetos, $Z_{real}$ com trena, $Z_{BM}$, erro absoluto e relativo) após corrigir a troca de índices das câmeras e revalidar a retificação, conforme apontado na análise do Lab 5.
+
+| Objeto | $Z_{real}$ (trena, cm) | $Z_{BM}$ (cm) | Erro absoluto (cm) | Erro relativo (%) |
 | :--- | :---: | :---: | :---: | :---: |
-| Objeto 1: [Descrever Ex: Caixa de papelão com textura] | [Valor Real 1] | [Valor SGBM 1] | [Cálculo] | [Cálculo] |
-| Objeto 2: [Descrever Ex: Garrafa colorida] | [Valor Real 2] | [Valor SGBM 2] | [Cálculo] | [Cálculo] |
-| Objeto 3: [Descrever Ex: Objeto distante/liso] | [Valor Real 3] | [Valor SGBM 3] | [Cálculo] | [Cálculo] |
+| Objeto 1 | _a medir_ | _a medir_ | | |
+| Objeto 2 | _a medir_ | _a medir_ | | |
+| Objeto 3 | _a medir_ | _a medir_ | | |
 
-[Análise da Tabela: Insira aqui a avaliação dos resultados. Exemplo: O objeto 1 apresentou baixo erro devido à alta variação de textura, enquanto o objeto 3 apresentou maior discrepância pois, em maiores distâncias, uma flutuação de 1 pixel na disparidade causou um sobressalto de vários centímetros na métrica final.]
+### VI. Integração: Programa para o Trabalho Final
 
-### VI. Integração: Programa Jupyter para o Trabalho Final
+O item VI pede um programa completo em Jupyter que forneça a distância da câmera estéreo a um objeto específico, ligado ao tema do trabalho final. Atendemos a esse item consolidando as cinco etapas em um único notebook, o [`lab6.ipynb`](https://github.com/kaykyb/ufabc-cv/blob/main/laboratorios/lab6/lab6.ipynb): a célula de configuração fixa os IDs das câmeras (0 e 1) e os caminhos dos arquivos, e as células seguintes vão da captura até a medição de distância ao vivo, carregando o `params_py.xml` para retificar os quadros e aplicando o Block Matching com os parâmetros fixos do `depth_estmation_params_py.xml`. A distância reportada pela célula de prevenção de obstáculos é justamente a que serviria de **gatilho por profundidade** no nosso [trabalho final]({{< ref "trabalho-tema" >}}), um sistema de reconhecimento de valores de cédulas para comerciantes com baixa visão: disparar a classificação apenas quando um objeto entra na zona útil de leitura (por exemplo, entre 15 e 40 cm da câmera), evitando processar o fundo da cena.
 
-Com base em todos os roteiros, condensamos a lógica no notebook do Jupyter que visa se tornar a base do nosso projeto final. O código importa o `params_py.xml` (para retificar as imagens ao vivo), aplica o `StereoSGBM` com as configurações fixas do `depth_estimation_params_py.xml` e retorna ativamente em tela a distância do objeto de interesse.
-
-[Descrever aqui: Explique sucintamente como esse notebook Jupyter (ex: calculando a distância média dentro de uma Bounding Box central da imagem) se conecta com o tema específico escolhido para o trabalho final da equipe "Sem Título".]
+Vale a ressalva de integridade já feita nas seções anteriores: o notebook executa o pipeline de ponta a ponta, mas os valores absolutos de distância permanecem pouco confiáveis enquanto a calibração estéreo herdada do Lab 5 não for corrigida (troca de índices das câmeras e retificação degenerada). A correção dessa calibração é o próximo passo da equipe antes de acoplar o gatilho por profundidade ao trabalho final.
 
 ---
 
 ## Análise e discussão
 
-A execução dos algoritmos revelou as forças e as limitações práticas da visão estéreo passiva:
+A execução expôs, na ordem de importância, os seguintes fatores:
 
-1.  **Influência da Textura na Cena:** Observamos que o Block Matching sofre degradação em regiões lisas ou sem textura (como paredes brancas uniformes ou quadros refletivos). Onde não há gradiente de cor, a função SAD não encontra um mínimo global claro, resultando nos temidos "buracos negros" no mapa de disparidade (pixels inválidos com ruído speckle).
-2.  **Sensibilidade dos Hiperparâmetros:** O parâmetro `blockSize` se mostrou um fator decisivo de *trade-off*. Um tamanho de bloco pequeno preservou bem os contornos dos objetos, mas gerou um mapa repleto de ruído estatístico. Aumentar excessivamente o bloco suprimiu os ruídos, mas "borrou" as bordas dos obstáculos, fazendo com que objetos finos fossem engolidos pelo fundo da cena.
-3.  **Erros de Quantização de Disparidade:** Conforme demonstrado pela equação da Triangulação, os erros de distância crescem não-linearmente à medida que a distância do objeto aumenta. Um erro de $\pm 1$ pixel em um objeto a 30 cm de distância pouco altera a medição final em milímetros. Contudo, em uma distância de 2 metros, devido à linha de base muito curta (da ordem de 6 cm), essa mesma flutuação de 1 pixel resulta em erros da ordem de dezenas de centímetros.
+1.  **Calibração como fator dominante.** O limitante principal dos nossos resultados não foi o algoritmo de disparidade, e sim a calibração estéreo herdada do Lab 5. Como a retificação estava degenerada (índices esquerda/direita trocados entre captura e visualização, o que projeta o ponto principal para fora da imagem e esvazia a ROI de uma das câmeras), as linhas epipolares não ficam de fato alinhadas, e a busca por correspondência ao longo da linha parte de uma premissa violada. Todos os efeitos abaixo são amplificados por isso: o mapa esparso da Seção II e a curva $Z \times d$ não monotônica da Seção III são sintomas do mesmo problema de base.
+2.  **Influência da textura na cena.** O Block Matching se degrada em regiões lisas ou sem textura: onde não há gradiente, a métrica SAD não encontra um mínimo claro, produzindo os "buracos" pretos (pixels inválidos com ruído *speckle*) bem visíveis nas capturas das mãos e da cena de obstáculos. O BM é justamente o algoritmo mais sensível a isso, e um SGBM, com suas restrições de suavidade global, atenuaria parte desses vazios.
+3.  **Sensibilidade dos hiperparâmetros.** O `blockSize` foi o *trade-off* mais decisivo: blocos pequenos preservam contornos mas enchem o mapa de ruído estatístico, enquanto blocos grandes suprimem o ruído mas borram as bordas, fazendo objetos finos serem engolidos pelo fundo. O `textureThreshold` e o `uniquenessRatio` ajudaram a descartar correspondências duvidosas, ao custo de deixar o mapa ainda mais esparso.
+4.  **Erros de quantização da disparidade.** Mesmo com calibração perfeita, a equação $Z = f B / d$ amplia erros com a distância: um erro de $\pm 1$ pixel a 30 cm quase não altera a medida, mas a 2 m, com uma *baseline* curta (da ordem de 6 cm), a mesma flutuação de 1 pixel vira dezenas de centímetros. Isso explica por que a leitura da Seção IV oscilava tanto para um objeto parado a ~1,5 m.
 
 ## Conclusões
 
-Os experimentos do Laboratório 6 comprovaram que a câmera estéreo, uma vez bem calibrada, é um instrumento viável de baixo custo para a medição passiva de distância de objetos no espaço. Através do algoritmo de *Semi-Global Block Matching* e da sintonia dos hiperparâmetros, logramos traduzir as disparidades em pixels de um plano 2D para métricas de profundidade absoluta no plano 3D com precisão aceitável para aplicações de robótica ou monitoramento, contanto que restritas à faixa útil delimitada pela modesta linha de base do equipamento montado pela nossa equipe.
+Os experimentos do Laboratório 6 percorreram o pipeline completo de estimação de profundidade: recalibramos a câmera estéreo, sintonizamos por interface gráfica o Block Matching do OpenCV, geramos mapas de disparidade, ajustamos a constante da triangulação para converter disparidade em distância e executamos o programa de prevenção de obstáculos, que forneceu leituras de distância ao vivo. Do ponto de vista de execução do roteiro, o caminho foi percorrido de ponta a ponta.
+
+Do ponto de vista de precisão, porém, os resultados ficaram aquém do esperado, e por um motivo que já conhecíamos: a calibração estéreo degenerada, herdada do Lab 5, se propaga por toda a cadeia. Os mapas de disparidade saíram esparsos, a curva profundidade contra disparidade não seguiu o decaimento monotônico previsto e as medições de distância oscilaram demais para serem validadas contra a trena. Optamos por relatar isso abertamente, sem preencher tabelas com números que não sustentam uma medição confiável.
+
+A lição que levamos é clara e reforça a do laboratório anterior: em visão estéreo, a qualidade da retificação é pré-condição para tudo o que vem depois, e nenhum ajuste de parâmetros do Block Matching compensa uma calibração torta. O próximo passo, também necessário para usar a câmera no trabalho final, é corrigir a troca de índices das câmeras, revalidar a retificação com linhas epipolares horizontais e só então refazer as medições quantitativas e versionar o notebook de integração.
 
 ## Declaração de uso de Inteligência Artificial Generativa
 
-Em atendimento à Portaria CNPq 2664/2026, declaramos que ferramentas de Inteligência Artificial Generativa foram utilizadas como auxílio para a **estruturação arquitetônica do relatório, formatação em sintaxe Markdown (incluindo diagramas de bloco e modelagem de tabelas), e refinamento gramatical** das seções teóricas. A manipulação física do equipamento, a sintonia e definição de todas as variáveis dos algoritmos de SGBM, as tomadas de decisão na calibração, e as medições físicas preenchidas nas tabelas comparativas com trena foram realizados integralmente de forma empírica pelos autores. A equipe responsabiliza-se solidariamente pela veracidade dos dados técnicos e pelo escopo integral submetido neste projeto.
+Em atendimento à Portaria CNPq 2664/2026, declaramos que ferramentas de Inteligência Artificial Generativa foram utilizadas como apoio na **organização e redação** deste relatório (estruturação do texto, formatação em Markdown, incluindo o diagrama de blocos, e revisão de clareza das seções teóricas). A manipulação física do equipamento, a captura das imagens de calibração, a sintonia dos parâmetros do Block Matching, as execuções de cada script e as leituras de distância registradas nas capturas de tela foram realizadas integralmente de forma empírica pelos autores. Nenhum dado de medição foi gerado ou preenchido por IA; os pontos em aberto estão sinalizados como pendentes no texto. A equipe conferiu e validou o conteúdo final e responsabiliza-se integralmente por ele.
 
 ## Referências
 
