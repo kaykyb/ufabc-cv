@@ -40,7 +40,7 @@ Verificar, com pessoas de fora da equipe, três coisas que os testes internos n�
 - **Estado inicial:** sistema rodando (`detectar.py` com o modelo treinado, limiar padrão de 80%), bancada vazia, iluminação fixada pela equipe. O voluntário chega com tudo pronto.
 - **Papéis:** um integrante conduz a sessão (dá as instruções e entrega as cédulas), outro registra os resultados na ficha da seção 6. O condutor **não corrige nem ajuda** durante as tarefas, exceto se o voluntário travar por mais de um minuto.
 - **Retorno do sistema:** a resposta principal é o **anúncio falado** do valor ("cinquenta reais"), com debounce de 7 segundos para a mesma nota (uma nota diferente é anunciada na hora). Em paralelo, a tela exibe "NOTA X DETECTADA" com a confiança, que o registrador usa para conferência.
-- **Cédulas do teste:** um conjunto separado pela equipe com as seis denominações cobertas pelo modelo atual (R$ 2, 5, 10, 20, 50 e 100), incluindo exemplares bem conservados e exemplares desgastados/amassados. A nota de R$ 200 fica fora do teste até entrar no dataset de treino.
+- **Cédulas do teste:** um conjunto separado pela equipe com as seis denominações cobertas pelo modelo atual (2, 5, 10, 20, 50 e 100 reais), incluindo exemplares bem conservados e exemplares desgastados/amassados. A nota de 200 reais fica fora do teste até entrar no dataset de treino.
 - **Registro:** cada sessão é gravada em vídeo (com autorização do voluntário) e anotada na ficha de registro. O vídeo captura a bancada e a tela, não o rosto do voluntário.
 - **Duração alvo:** 10 a 15 minutos por voluntário.
 
