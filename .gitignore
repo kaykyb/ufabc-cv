@@ -12,3 +12,6 @@ venv/
 .idea/
 .vscode/
 private/
+
+trabalho-final/dataset/
+trabalho-final/__pycache__/
