@@ -13,7 +13,7 @@ O sistema reconhece a denominação de cédulas do Real em tempo real, a partir 
 | `capturar.py` | Ferramenta interativa de captura de imagens para o dataset |
 | `localizacao.py` | Localização da cédula por visão clássica (Otsu + contornos) |
 | `treinar.py` | Treino da CNN sobre o dataset capturado |
-| `detectar.py` | Detecção ao vivo no feed da câmera |
+| `detectar.py` | Detecção ao vivo no feed da câmera, com anúncio do valor por voz |
 | `modelo.pt` | Modelo treinado (pesos + classes + tamanho de entrada) |
 | `requirements.txt` | Dependências Python |
 | `dataset/` | Imagens capturadas, uma pasta por classe (não versionada) |
@@ -101,15 +101,20 @@ O dispositivo é escolhido automaticamente: GPU da Apple (MPS) se houver, senão
 ```bash
 python detectar.py                 # câmera WC056, modelo.pt, limiar 0.8
 python detectar.py --limiar 0.9    # exige mais confiança para acusar detecção
+python detectar.py --sem-voz       # desliga o anúncio falado
 ```
 
-A cada quadro o sistema recorta a nota (mesma localização clássica do treino), classifica o recorte e mostra a previsão com a confiança. Quando a classe prevista é uma cédula com confiança acima do limiar, a tela destaca "NOTA X DETECTADA" e desenha a caixa rotacionada em volta da nota. Bancada vazia responde "vazio" sem passar pela rede. `q` ou `ESC` encerra.
+A cada quadro o sistema recorta a nota (mesma localização clássica do treino), classifica o recorte e mostra a previsão com a confiança. Quando a classe prevista é uma cédula com confiança acima do limiar, a tela destaca "NOTA X DETECTADA", desenha a caixa rotacionada em volta da nota e **fala o valor em voz alta** ("cinquenta reais"). Bancada vazia responde "vazio" sem passar pela rede. `q` ou `ESC` encerra.
+
+A fala tem debounce: a mesma nota só é repetida depois de 7 segundos (ajustável com `--debounce`), mas uma nota diferente é anunciada imediatamente. O TTS usa o comando `say` no macOS ou o `espeak` em outros sistemas; se nenhum dos dois existir, o programa avisa e segue só com a tela.
 
 | Flag | Efeito |
 | --- | --- |
 | `--modelo ARQ` | Arquivo do modelo treinado (padrão: `modelo.pt`) |
 | `--limiar F` | Confiança mínima para acusar detecção, 0 a 1 (padrão: 0.8) |
 | `--area-min F` | Área mínima da nota como fração do frame (padrão: 0.02) |
+| `--debounce F` | Segundos até repetir a fala da mesma nota (padrão: 7) |
+| `--sem-voz` | Desliga o anúncio falado |
 | `--camera N` / `--nome-camera NOME` | Seleção da câmera, como na captura |
 
 ## Solução de problemas
@@ -118,3 +123,4 @@ A cada quadro o sistema recorta a nota (mesma localização clássica do treino)
 - **Detecção instável ou nota não encontrada:** verifique o fundo (precisa ser escuro e fosco) e a iluminação; ajuste `--area-min` se a nota ocupar uma fração muito pequena do quadro.
 - **Modelo confunde denominações:** capture mais imagens das classes confundidas (frente e verso, rotações, posições variadas) e retreine.
 - **Cores/brilho variando entre sessões:** tente `--travar` na captura; se a câmera ignorar, fixe a iluminação.
+- **Sem anúncio falado:** no macOS o `say` já vem com o sistema; no Linux instale o `espeak`. Verifique também o volume e se a detecção está de fato acontecendo (a fala só ocorre com confiança acima do limiar). Para conferir sem áudio, use a tela; para silenciar de propósito, use `--sem-voz`.
