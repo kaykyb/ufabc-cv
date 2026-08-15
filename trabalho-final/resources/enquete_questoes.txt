@@ -1,0 +1,18 @@
+Questão	Texto
+Q1	Gostaria de usar esse sistema com frequência
+Q2	Achei o sistema desnecessariamente complexo
+Q3	Achei o sistema fácil de usar
+Q4	Acho que precisaria de suporte de uma pessoa técnica para usar esse sistema
+Q5	Achei que várias funções do sistema foram bem integradas
+Q6	Achei que havia várias inconsistências no sistema
+Q7	Imagino que a maioria das pessoas aprenderia a usar esse sistema rapidamente
+Q8	Achei o sistema complicado de usar
+Q9	Me senti confiante ao usar o sistema
+Q10	Precisei aprender muitas coisas antes que pudesse usar o sistema
+Q11	Você achou o sistema interativo?
+Q12	Do que você mais gostou no sistema?
+Q13	Do que você menos gostou no sistema?
+Q14	Sugestões e comentários
+Q15	Qual é o objetivo deste sistema testado?
+Q16	Descreva resumidamente os experimentos que você realizou com o sistema
+Q17	Descreva resumidamente os resultados obtidos nestes experimentos

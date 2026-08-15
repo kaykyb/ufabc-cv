@@ -1,0 +1,13 @@
+CV_2026.2 - Teste voluntário (10.08.2026),,,,,,,,,,,,,,,,,,,,
+Enquete de Opinião,Programa de Reconhecimento de Valores de Cédulas,,,,,,,,,,,,,,,,,,,
+Transcrição das Fichas de Opinião,"Grupo 8 - ""Sem Título""",,,,,,,,,,,,,,,,,,,
+Nome completo,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Q11,Q12 - Mais gostou,Q13 - Menos gostou,Q14 - Sugestões e comentários,Q15 - Objetivo do sistema,Q16 - Experimentos realizados,Q17 - Resultados obtidos,Precisão,Precisão %,Tempo Médio (S)
+Raphael M.,5,1,5,1,5,1,5,1,5,1,5,Velocidade de resposta,Nada,Sem sugestões,Identificação de cédulas de dinheiro,Testamos várias cédulas diferentes e o sistema reconheceu.,O sistema identificou e falou o valor de cada cédula corretamente.,5/6,"0,83","2,8"
+Luana R.,5,1,5,1,5,1,5,1,5,1,5,Ele reconhece rapidamente as cédulas e não reconhece fotos,,,"Reconhecer o valor de uma cédula, muito interessante para pessoas com deficiência visual",Coloquei diferentes cédulas na câmera,Ele leu corretamente todas as cédulas que coloquei,4/5,"0,8","2,6"
+Rafael C.,5,1,5,1,5,1,5,1,5,1,5,Leitura em voz alta dos valores,Impossibilidade de detectar notas de 200,,Detectar cédulas,Testei o sistema com notas de 2/5/10/20/50/100,O sistema detectou corretamente todas as cédulas,4/4,1,"2,7"
+Valério A.,4,1,5,1,5,1,5,1,4,1,5,Agilidade e precisão,,Integração com outros sistemas inteligentes,Identificação de cédulas,Teste com cédulas reais,Identificação satisfatória das cédulas mesmo com as notas dobradas,4/6,"0,66","2,8"
+Paloma S.,3,1,5,1,5,2,5,1,5,1,5,Identificar as cédulas com sucesso e poder reconhecer os valores,Não contou as notas simultaneamente,Contar múltiplas notas de uma vez,Acessibilidade,"Coloquei as 4 cédulas independentemente, depois duas juntas",Identificou corretamente as notas.,5/5,1,"2,8"
+Vinicius C.,5,1,5,1,5,1,5,1,5,1,5,O diferencial da fala pelo sistema,Não acho que terá uma grande aplicabilidade,"Bom projeto, mas não vejo quão útil",Identificar pela câmera valores de cédulas,Apresentar a cédula ao visor da câmera e receber o resultado,O sistema identificou precisamente os valores,3/4,"0,75",3
+Willian T.,5,1,5,1,5,2,5,1,5,1,5,Identificou a nota um pouco amassada,Nota precisar ser colocada por completo na camera,Validação para mais de uma nota simultânea,Identificar notas (dinheiro),"Utilização de um reconhecimento de cédulas de 10, 20, 50 e 100 reais",No geral os resultados foram positivos;,5/6,"0,83","3,1"
+Samira H.,4,1,5,1,5,1,5,1,5,5,5,Muito rápido,Amei tudo,Seria legal se ele tivesse um contador para somar cédulas,Reconhecer cédulas,Coloquei várias cédulas na frente da câmera e analisei o resultado,"Muito bom, ele reconheceu quase todas as notas, em diferentes ângulos e posições",5/6,"0,83","2,7"
+Média,"4,5",1,5,1,5,"1,25",5,1,"4,875","1,5",5,,,,,,,,"0,8375","2,8125"
