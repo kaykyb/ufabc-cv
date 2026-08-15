@@ -7,11 +7,18 @@ Site publicado: <https://kaykyb.github.io/ufabc-cv/>
 ## Estrutura
 
 ```
-laboratorios/        # notebooks Jupyter, um diretório por laboratório
-scripts/             # utilitários Python
-data/                # dados (amostras pequenas; grandes ficam fora do git)
+laboratorios/        # notebooks Jupyter, um diretório por laboratório (lab1 ... lab6)
+  labN/labN.ipynb    # notebook do laboratório
+  labN/data/         # dados do laboratório (amostras pequenas; grandes ficam fora do git)
+trabalho-final/      # projeto final: scripts Python, modelo e notebook de análise
+  *.py               # captura, detecção, localização e treino
+  analise_resultados.ipynb
+  resources/         # dados de apoio (enquete de opinião, questões)
+private/             # material de apoio não publicado (entrevistas, manual)
 site/                # site Hugo (tema PaperMod)
-  content/posts/     # relatórios - um page bundle por laboratório
+  content/posts/     # relatórios - um page bundle por laboratório/etapa
+  layouts/           # overrides de template
+  hugo.toml          # configuração do site
 ```
 
 ## Fluxo de um relatório
