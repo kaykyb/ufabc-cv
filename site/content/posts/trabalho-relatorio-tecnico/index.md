@@ -1,5 +1,5 @@
 ---
-title: "[8] Trabalho Final - Relatório Técnico"
+title: "[8] Trabalho Final - Relatório Técnico e Artigo"
 authors:
   [
     "Kayky de Brito dos Santos",
@@ -7,7 +7,7 @@ authors:
     "Rafael de Souza Coelho",
   ]
 date: 2026-08-16
-summary: "Oitava etapa do trabalho final: o relatório técnico consolidado do Programa de Reconhecimento de Valores de Cédulas. Reúne, num só documento, a origem do problema nas entrevistas, a modelagem funcional, a localização clássica por Otsu, a arquitetura da CNN (155.911 parâmetros), o dataset de 1.393 imagens, a matriz de confusão do classificador (94,6% de acurácia e F1 macro de 0,944, sem confusão entre as notas de 50 e 100 reais), os resultados dos testes com 8 voluntários (83,3% de acerto, 2,81 s de latência percebida, SUS 96,6) e os trabalhos futuros."
+summary: "Oitava etapa do trabalho final: o relatório técnico consolidado do Programa de Reconhecimento de Valores de Cédulas. Reúne, num só documento, a origem do problema nas entrevistas, a modelagem funcional, a localização clássica por Otsu, a arquitetura da CNN (155.911 parâmetros), o dataset de 1.393 imagens, a matriz de confusão do classificador (94,6% de acurácia e F1 macro de 0,944, sem confusão entre as notas de 50 e 100 reais), os resultados dos testes com 8 voluntários (83,3% de acerto, 2,81 s de latência percebida, SUS 96,6) e os trabalhos futuros. Traz também o link para o artigo em formato IEEE."
 tags: ["trabalho"]
 math: true
 ---
@@ -337,11 +337,17 @@ Em ordem de retorno esperado:
 | 5 | [Roteiro de Testes]({{< ref "trabalho-roteiro-testes" >}}) |
 | 6 | [Relatório dos Testes Voluntários]({{< ref "trabalho-relatorio-testes" >}}) |
 | 7 | [Análise dos Resultados]({{< ref "trabalho-analise-resultados" >}}) |
-| 8 | Relatório Técnico (este documento) |
+| 8 | Relatório Técnico e Artigo (este documento) |
 
 Código, modelo treinado, manual de uso e notebook de análise: [`trabalho-final/`](https://github.com/kaykyb/ufabc-cv/tree/main/trabalho-final).
 
-## 10. Referências
+## 10. Artigo em Formato IEEE
+
+O conteúdo deste relatório também foi condensado em um artigo no modelo IEEEtran de conferência, com as seções de introdução, metodologia, resultados e conclusão, reunindo as fotos da maquete, os gráficos de desempenho e a matriz de confusão em um documento único de leitura contínua.
+
+**[Artigo completo em PDF](https://github.com/kaykyb/ufabc-cv/blob/main/trabalho-final/artigo.pdf)**
+
+## 11. Referências
 
 - BRADSKI, G.; KAEHLER, A. _Learning OpenCV_. O'Reilly, 2008.
 - OTSU, N. _A Threshold Selection Method from Gray-Level Histograms_. IEEE Transactions on Systems, Man, and Cybernetics, 1979.
